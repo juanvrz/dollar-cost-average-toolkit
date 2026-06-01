@@ -40,3 +40,8 @@ export async function fetchHistoricalPrices(symbol: string, startDate: Date, end
 
 	return { symbol, prices };
 }
+
+export async function fetchHistoricalExchangeRates(fromCurrency: string, toCurrency: string, startDate: Date, endDate: Date, frequency: Frequency): Promise<AssetPriceHistory> {
+	const symbol = `${fromCurrency}${toCurrency}=X`;
+	return fetchHistoricalPrices(symbol, startDate, endDate, frequency);
+}

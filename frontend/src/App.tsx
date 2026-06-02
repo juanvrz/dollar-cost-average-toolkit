@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { fetchAssets } from './services/assets.service';
 import { simulateDCA } from './services/dca.service';
 import DCAForm from './components/DCAForm';
+import DCAResults from './components/DCAResults';
+import DCAChart from './components/DCAChart';
 import type { AssetDefinition } from './types/asset.types';
 import type { DCAInput, DCAResult } from './types/dca.types';
 
@@ -59,7 +61,15 @@ function App() {
 						{error && <p className="text-red-600">Error: {error}</p>}
 						{simulating && <p className="text-gray-500">Simulating...</p>}
 						{!simulating && !result && !error && <p className="text-gray-500">Configure a simulation and click Simulate to see results.</p>}
-						{result && <pre className="text-xs overflow-auto bg-gray-50 p-4 rounded">{JSON.stringify(result.summary, null, 2)}</pre>}
+						{result && (
+							<>
+								<DCAResults result={result} />
+								<div className="mt-6">
+									<h3 className="text-md font-semibold mb-3">Evolution over time</h3>
+									<DCAChart purchases={result.purchases} currency={result.input.currency} />
+								</div>
+							</>
+						)}
 					</section>
 				</div>
 			</main>

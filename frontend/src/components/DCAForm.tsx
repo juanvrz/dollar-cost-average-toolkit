@@ -27,11 +27,15 @@ function DCAForm({ assets, onSubmit }: DCAFormProps) {
 		});
 	};
 
+	const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+	const inputClass = "w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md pl-3 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500";
+	const selectClass = "w-full appearance-none border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-no-repeat bg-right";
+
 	return (
 		<form onSubmit={handleSubmit} className="space-y-4">
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-1">Asset</label>
-				<select value={assetId} onChange={(e) => setAssetId(e.target.value)} className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+				<label className={labelClass}>Asset</label>
+				<select value={assetId} onChange={(e) => setAssetId(e.target.value)} className={selectClass}>
 					{assets.map((asset) => (
 						<option key={asset.id} value={asset.id}>
 							{asset.name}
@@ -41,31 +45,31 @@ function DCAForm({ assets, onSubmit }: DCAFormProps) {
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-1">Amount per purchase</label>
-				<input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} min={1} className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+				<label className={labelClass}>Amount per purchase</label>
+				<input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} min={1} className={inputClass} />
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
-				<select value={currency} onChange={(e) => setCurrency(e.target.value as Currency)} className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+				<label className={labelClass}>Currency</label>
+				<select value={currency} onChange={(e) => setCurrency(e.target.value as Currency)} className={selectClass}>
 					<option value="EUR">EUR</option>
 					<option value="USD">USD</option>
 				</select>
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-1">Start date</label>
-				<input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+				<label className={labelClass}>Start date</label>
+				<input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className={inputClass} />
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-1">End date</label>
-				<input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+				<label className={labelClass}>End date</label>
+				<input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className={inputClass} />
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
-				<select value={frequency} onChange={(e) => setFrequency(e.target.value as Frequency)} className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+				<label className={labelClass}>Frequency</label>
+				<select value={frequency} onChange={(e) => setFrequency(e.target.value as Frequency)} className={selectClass}>
 					<option value="daily">Daily</option>
 					<option value="weekly">Weekly</option>
 					<option value="biweekly">Biweekly</option>

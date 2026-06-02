@@ -1,7 +1,7 @@
 import { fetchHistoricalPrices, fetchHistoricalExchangeRates } from '../clients/yahoofinance.client';
 import { convertPriceHistory } from './currency.service';
 import { ASSET_CATALOG } from '../types/asset.catalog';
-import { DCAInput, DCAResult, DCAPurchase, DCASummary } from '../types/dca.types';
+import { DCAInput, DCAResult, DCAPurchase, DCASummary, DCAComparison } from '../types/dca.types';
 import { AssetPriceHistory } from '../types/asset.types';
 
 export async function simulateDCA(input: DCAInput): Promise<DCAResult> {
@@ -23,7 +23,21 @@ export async function simulateDCA(input: DCAInput): Promise<DCAResult> {
 	const purchases = buildPurchases(priceHistory, input.amountPerPurchase);
 	const summary = buildSummary(purchases);
 
-	return { input, purchases, summary };
+	const result: DCAResult = { input, purchases, summary };
+
+	if (input.compareWith === 'lump-sum') {
+		const totalAmount = input.amountPerPurchase * priceHistory.prices.length;
+		const lumpSumPurchases = simulateLumpSum(priceHistory, totalAmount);
+		const lumpSumSummary = buildSummary(lumpSumPurchases);
+		const comparison: DCAComparison = {
+			strategy: 'lump-sum',
+			purchases: lumpSumPurchases,
+			summary: lumpSumSummary,
+		};
+		result.comparison = comparison;
+	}
+
+	return result;
 }
 
 function buildPurchases(priceHistory: AssetPriceHistory, amountPerPurchase: number): DCAPurchase[] {
@@ -72,4 +86,23 @@ function buildSummary(purchases: DCAPurchase[]): DCASummary {
 		absoluteReturn,
 		percentageReturn,
 	};
+}
+
+export function simulateLumpSum(priceHistory: AssetPriceHistory, totalAmount: number): DCAPurchase[] {
+	if (priceHistory.prices.length === 0) {
+		return [];
+	}
+
+	const firstPrice = priceHistory.prices[0].price;
+	const unitsBought = totalAmount / firstPrice;
+
+	return priceHistory.prices.map((point) => ({
+		date: point.date,
+		pricePerUnit: point.price,
+		unitsBought: 0,
+		amountInvested: 0,
+		totalInvested: totalAmount,
+		totalUnits: unitsBought,
+		portfolioValue: unitsBought * point.price,
+	}));
 }

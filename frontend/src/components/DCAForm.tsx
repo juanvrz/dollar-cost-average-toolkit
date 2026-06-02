@@ -5,9 +5,14 @@ import type { Currency, Frequency, DCAInput } from '../types/dca.types';
 interface DCAFormProps {
 	assets: AssetDefinition[];
 	onSubmit: (input: DCAInput) => void;
+	onAddComparison: () => void;
+	canAddComparison: boolean;
+	hasResult: boolean;
+	simulating: boolean;
+	comparing: boolean;
 }
 
-function DCAForm({ assets, onSubmit }: DCAFormProps) {
+function DCAForm({ assets, onSubmit, onAddComparison, canAddComparison, hasResult, simulating, comparing }: DCAFormProps) {
 	const [assetId, setAssetId] = useState<string>('btc');
 	const [amount, setAmount] = useState<number>(100);
 	const [currency, setCurrency] = useState<Currency>('EUR');
@@ -77,9 +82,26 @@ function DCAForm({ assets, onSubmit }: DCAFormProps) {
 				</select>
 			</div>
 
-			<button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
-				Simulate
+			<button type="submit" disabled={simulating} className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-md transition-colors mt-6 flex items-center justify-center gap-2">
+				{simulating && (
+					<svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+						<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+						<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+					</svg>
+				)}
+				{simulating ? 'Simulating...' : 'Simulate'}
 			</button>
+			{hasResult && (
+				<button type="button" onClick={onAddComparison} disabled={comparing} className={`w-full text-white font-medium py-2 px-4 rounded-md transition-colors mt-6 flex items-center justify-center gap-2 disabled:cursor-not-allowed ${canAddComparison ? 'bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400' : 'bg-red-600 hover:bg-red-700 disabled:bg-red-400'}`}>
+					{comparing && (
+						<svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+							<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+							<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+						</svg>
+					)}
+					{comparing ? 'Adding comparison...' : canAddComparison ? '+ Compare with Lump-sum' : '× Remove comparison'}
+				</button>
+			)}
 		</form>
 	);
 }

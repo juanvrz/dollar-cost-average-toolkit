@@ -8,6 +8,7 @@ export interface DCAInput {
 	startDate: string;
 	endDate: string;
 	frequency: Frequency;
+	compareWith?: 'lump-sum';
 }
 
 export interface DCAPurchase {
@@ -22,6 +23,13 @@ export interface DCAPurchase {
 
 export interface DCAResult {
 	input: DCAInput;
+	purchases: DCAPurchase[];
+	summary: DCASummary;
+	comparison?: DCAComparison;
+}
+
+export interface DCAComparison {
+	strategy: 'lump-sum';
 	purchases: DCAPurchase[];
 	summary: DCASummary;
 }

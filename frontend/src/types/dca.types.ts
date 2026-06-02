@@ -1,4 +1,5 @@
 import type { Currency } from './asset.types';
+export type { Currency };
 
 export type Frequency = 'daily' | 'weekly' | 'biweekly' | 'monthly';
 
